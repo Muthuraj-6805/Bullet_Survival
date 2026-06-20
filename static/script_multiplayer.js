@@ -1,6 +1,86 @@
 // ---------------- SOCKET ----------------
 
-const socket = io();
+const socket = io({
+
+    transports: ["websocket"],
+
+    reconnection: true,
+
+    reconnectionAttempts: Infinity,
+
+    reconnectionDelay: 1000
+
+});
+
+// ---------------- CONNECTION LOGGING ----------------
+
+socket.on(
+
+    "connect",
+
+    () => {
+
+        console.log(
+
+            "CONNECTED"
+
+        );
+
+        console.log(
+
+            "Socket ID:",
+
+            socket.id
+
+        );
+
+    }
+
+);
+
+socket.on(
+
+    "disconnect",
+
+    reason => {
+
+        console.log(
+
+            "DISCONNECTED"
+
+        );
+
+        console.log(
+
+            reason
+
+        );
+
+    }
+
+);
+
+socket.on(
+
+    "connect_error",
+
+    err => {
+
+        console.log(
+
+            "CONNECT ERROR"
+
+        );
+
+        console.log(
+
+            err
+
+        );
+
+    }
+
+);
 
 // ---------------- STATE ----------------
 
@@ -119,12 +199,14 @@ socket.on(
         roomCode = data.room_code;
 
         document.getElementById(
+
             "roomCodeText"
+
         ).innerHTML =
 
-            "<b>Code:</b> " +
+            "<b>Room Code:</b> "
 
-            roomCode;
+            + roomCode;
 
         menu.style.display = "none";
 
@@ -142,17 +224,26 @@ socket.on(
     "room_joined",
 
     data => {
-        console.log("ROOM JOINED");
 
-        console.log(data); 
+        console.log(
+
+            "ROOM JOINED"
+
+        );
+
+        console.log(
+
+            data
+
+        );
 
         roomCode = data.room_code;
 
         roomInfo.innerText =
 
-            "ROOM : " +
+            "Room Code: "
 
-            roomCode;
+            + roomCode;
 
         menu.style.display = "none";
 
@@ -181,7 +272,6 @@ socket.on(
 
 );
 
-
 // ---------------- ROOM PLAYERS ----------------
 
 socket.on(
@@ -190,9 +280,6 @@ socket.on(
 
     players => {
 
-        console.log("UPDATE ROOM PLAYERS");
-
-        console.log(players);
         console.log(
 
             "===== UPDATE ROOM PLAYERS ====="
@@ -202,12 +289,6 @@ socket.on(
         console.log(
 
             players
-
-        );
-
-        console.log(
-
-            playersList
 
         );
 
@@ -272,6 +353,7 @@ ${p.ready ? "READY" : "NOT READY"}
     }
 
 );
+
 
 // ---------------- PROFILE ----------------
 
@@ -435,9 +517,9 @@ socket.on(
 
         scoreElement.innerText =
 
-            "Score: " +
+            "Score: "
 
-            score;
+            + score;
 
     }
 
@@ -532,7 +614,6 @@ backRoomBtn.addEventListener(
 
 );
 
-
 // ---------------- PLAYER POSITIONS ----------------
 
 socket.on(
@@ -574,6 +655,7 @@ socket.on(
     }
 
 );
+
 
 // ---------------- SEND POSITION ----------------
 
