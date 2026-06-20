@@ -1,0 +1,558 @@
+* {
+
+    box-sizing: border-box;
+
+}
+
+body {
+
+    margin: 0;
+
+    background: #111;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+
+    overflow: hidden;
+
+    touch-action: none;
+
+}
+
+
+/* ---------------- MENU ---------------- */
+
+#menu {
+
+    width: 100%;
+
+    height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+#menu h1 {
+
+    font-size: 50px;
+
+    margin-bottom: 40px;
+
+}
+
+.section {
+
+    margin: 20px 0;
+
+}
+
+.section p {
+
+    color: lightgray;
+
+}
+
+hr {
+
+    width: 300px;
+
+    border: 1px solid #333;
+
+    margin: 30px 0;
+
+}
+
+
+/* ---------------- LOBBY ---------------- */
+
+#lobby {
+
+    display: none;
+
+    width: 100%;
+
+    height: 100vh;
+
+    padding: 30px;
+
+    overflow-y: auto;
+
+    text-align: center;
+
+}
+
+#roomInfo {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+}
+
+#lobbyInstructions {
+
+    color: lightgray;
+
+    font-size: 18px;
+
+}
+
+
+/* ---------------- PLAYERS ---------------- */
+
+#playersList {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+}
+
+.playerCard {
+
+    width: 280px;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    border: 2px solid #444;
+
+    background: #222;
+
+}
+
+.playerCard h3 {
+
+    margin-top: 0;
+
+}
+
+.nameInput {
+
+    width: 180px;
+
+}
+
+
+/* ---------------- BUTTONS ---------------- */
+
+button {
+
+    padding: 12px 25px;
+
+    font-size: 18px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: dodgerblue;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+button:hover {
+
+    background: royalblue;
+
+    transform: scale(1.05);
+
+}
+
+
+/* ---------------- INPUT ---------------- */
+
+input {
+
+    padding: 12px;
+
+    font-size: 16px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+}
+
+input[type="color"] {
+
+    width: 80px;
+
+    height: 50px;
+
+    background: transparent;
+
+}
+
+/* ---------------- GAME UI ---------------- */
+
+#gameUI {
+
+    display: none;
+
+    width: 100%;
+
+    height: 100vh;
+
+}
+
+
+/* ---------------- SCORE ---------------- */
+
+#score {
+
+    position: absolute;
+
+    top: 15px;
+
+    left: 20px;
+
+    font-size: 24px;
+
+    z-index: 100;
+
+    pointer-events: none;
+
+}
+
+
+/* ---------------- STATUS ---------------- */
+
+#statusText {
+
+    position: absolute;
+
+    top: 60px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 30px;
+
+    text-align: center;
+
+    z-index: 100;
+
+    pointer-events: none;
+
+}
+
+
+/* ---------------- COUNTDOWN ---------------- */
+
+#countdownText {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 120px;
+
+    font-weight: bold;
+
+    color: gold;
+
+    z-index: 500;
+
+    pointer-events: none;
+
+}
+
+
+/* ---------------- CANVAS ---------------- */
+
+#gameCanvas {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    display: block;
+
+    background: #222;
+
+    z-index: 1;
+
+    touch-action: none;
+
+}
+
+
+/* ---------------- GAME OVER ---------------- */
+
+#gameOver {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    display: none;
+
+    background: rgba(0, 0, 0, 0.92);
+
+    padding: 35px;
+
+    border-radius: 20px;
+
+    border: 2px solid #444;
+
+    min-width: 320px;
+
+    text-align: center;
+
+    z-index: 300;
+
+}
+
+#gameOver h1 {
+
+    margin-top: 0;
+
+    color: red;
+
+}
+
+
+/* ---------------- GAME OVER TEXT ---------------- */
+
+#winnerText {
+
+    color: lime;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+}
+
+#loserText {
+
+    color: orange;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+}
+
+#finalScore {
+
+    color: gold;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+}
+
+
+/* ---------------- BUTTON WIDTHS ---------------- */
+
+#readyBtn,
+#exitRoomBtn,
+#backRoomBtn {
+
+    min-width: 180px;
+
+}
+
+
+/* ---------------- SCROLLBAR ---------------- */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: #444;
+
+    border-radius: 10px;
+
+}
+
+/* ---------------- PORTRAIT MODE ---------------- */
+
+@media screen and (orientation: portrait) {
+
+    #gameCanvas {
+
+        background: black;
+
+    }
+
+}
+
+
+/* ---------------- MOBILE ---------------- */
+
+@media (max-width: 768px) {
+
+    /* Menu */
+
+    #menu h1 {
+
+        font-size: 36px;
+
+    }
+
+    .section h2 {
+
+        font-size: 24px;
+
+    }
+
+    /* Buttons */
+
+    button {
+
+        font-size: 16px;
+
+        padding: 10px 20px;
+
+    }
+
+    /* Inputs */
+
+    input {
+
+        width: 180px;
+
+    }
+
+    .nameInput {
+
+        width: 80%;
+
+    }
+
+    /* Lobby */
+
+    #roomInfo {
+
+        font-size: 20px;
+
+    }
+
+    #lobbyInstructions {
+
+        font-size: 16px;
+
+    }
+
+    #playersList {
+
+        flex-direction: column;
+
+        align-items: center;
+
+    }
+
+    .playerCard {
+
+        width: 90%;
+
+    }
+
+    /* Game */
+
+    #score {
+
+        font-size: 18px;
+
+    }
+
+    #statusText {
+
+        font-size: 22px;
+
+        width: 90%;
+
+    }
+
+    #countdownText {
+
+        font-size: 80px;
+
+    }
+
+    /* Game Over */
+
+    #gameOver {
+
+        width: 90%;
+
+        min-width: unset;
+
+        padding: 20px;
+
+    }
+
+    #winnerText,
+    #loserText {
+
+        font-size: 20px;
+
+    }
+
+    #finalScore {
+
+        font-size: 24px;
+
+    }
+
+}
+
+#countdownBox {
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 20px;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: gold;
+
+}

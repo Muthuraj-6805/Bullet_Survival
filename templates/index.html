@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+                 initial-scale=1.0,
+                 maximum-scale=1.0,
+                 user-scalable=no">
+
+    <title>Bullet Survival</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<script>
+
+window.addEventListener(
+
+    "pageshow",
+
+    function() {
+
+        let navEntries =
+
+            performance.getEntriesByType(
+
+                "navigation"
+
+            );
+
+        if (
+
+            navEntries.length > 0 &&
+
+            navEntries[0].type === "reload"
+
+        ) {
+
+            window.location.href = "/";
+
+        }
+
+    }
+
+);
+
+</script>
+
+
+<!-- HOME MENU -->
+
+<div id="menu">
+
+    <h1>
+
+        BULLET SURVIVAL
+
+    </h1>
+
+    <!-- SINGLE PLAYER -->
+
+    <div class="section">
+
+        <h2>
+
+            Single Player
+
+        </h2>
+
+        <p>
+
+            Survive the bullet storm.
+
+        </p>
+
+        <button
+
+            onclick="window.location.href='/singleplayer'"
+
+        >
+
+            Play
+
+        </button>
+
+    </div>
+
+    <hr>
+
+    <!-- MULTIPLAYER -->
+
+    <div class="section">
+
+        <h2>
+
+            Multiplayer
+
+        </h2>
+
+        <p>
+
+            Play with your friends.
+
+        </p>
+
+        <button id="createRoomBtn">
+
+            Create Room
+
+        </button>
+
+        <br><br>
+
+        <input
+
+            type="text"
+
+            id="roomCode"
+
+            placeholder="Enter Room Code"
+
+        >
+
+        <button id="joinRoomBtn">
+
+            Join
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- LOBBY -->
+
+<div id="lobby">
+
+    <h1>
+
+        ROOM
+
+    </h1>
+
+    <div id="roomInfo">
+        <div id="countdownBox">
+
+            Game starts in:
+
+            <span id="countdownValue">
+
+                -
+
+            </span>
+
+        </div>
+
+        ROOM <span id="roomCodeText">
+            ----
+        </span>
+
+    </div>
+
+    <br>
+
+    <div id="lobbyInstructions">
+
+        When all players are ready,
+
+        the game starts automatically
+
+        after 3 seconds.
+
+    </div>
+
+    <br>
+
+    <h2>
+
+        Players
+
+    </h2>
+
+    <div id="playersList">
+
+    </div>
+
+    <br>
+
+    <button id="readyBtn">
+
+        READY
+
+    </button>
+
+    <br><br>
+
+    <button id="exitRoomBtn">
+
+        EXIT ROOM
+
+    </button>
+
+</div>
+
+
+<!-- GAME UI -->
+
+<div id="gameUI">
+
+    <div id="score">
+
+        Score: 0
+
+    </div>
+
+    <div id="statusText"></div>
+
+    <div id="countdownText"></div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- GAME OVER POPUP -->
+
+    <div id="gameOver">
+
+        <h1>
+
+            GAME OVER
+
+        </h1>
+
+        <br>
+
+        <h2>
+
+            Winner
+
+        </h2>
+
+        <div id="winnerText">
+
+            -
+
+        </div>
+
+        <br>
+
+        <h2>
+
+            Loser
+
+        </h2>
+
+        <div id="loserText">
+
+            -
+
+        </div>
+
+        <br>
+
+        <h2>
+
+            Total Score
+
+        </h2>
+
+        <div id="finalScore">
+
+            0
+
+        </div>
+
+        <br>
+
+        <button
+
+            id="backRoomBtn"
+
+        >
+
+            Back To Room
+
+        </button>
+
+        <br><br>
+
+        <button
+
+            onclick="goHome()"
+
+        >
+
+            Home
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- SOCKET.IO -->
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+<!-- COMMON -->
+
+<script
+
+    src="{{ url_for(
+
+        'static',
+
+        filename='game_rules.js'
+
+    ) }}"
+
+></script>
+
+
+<script
+
+    src="{{ url_for(
+
+        'static',
+
+        filename='game_core.js'
+
+    ) }}"
+
+></script>
+
+
+<!-- MULTIPLAYER -->
+
+<script
+
+    src="{{ url_for(
+
+        'static',
+
+        filename='script_multiplayer.js'
+
+    ) }}"
+
+></script>
+
+</body>
+
+</html>
