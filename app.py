@@ -24,6 +24,7 @@ WORLD_HEIGHT = 600
 shooters = [
 
     # corners
+
     (0, 0),
     (WORLD_WIDTH, 0),
 
@@ -31,6 +32,7 @@ shooters = [
     (WORLD_WIDTH, WORLD_HEIGHT),
 
     # edge centers
+
     (WORLD_WIDTH / 2, 0),
     (WORLD_WIDTH / 2, WORLD_HEIGHT),
 
@@ -58,6 +60,7 @@ PLAYER_COLORS = [
 # ---------------- DATA ----------------
 
 players = {}
+
 rooms = {}
 
 # ---------------- CONNECT ----------------
@@ -65,7 +68,13 @@ rooms = {}
 @socketio.on("connect")
 def handle_connect():
 
-    print("CONNECTED:", request.sid)
+    print(
+
+        "CONNECTED:",
+
+        request.sid
+
+    )
 
 # ---------------- HOME ----------------
 
@@ -73,7 +82,9 @@ def handle_connect():
 def home():
 
     return render_template(
+
         "index.html"
+
     )
 
 
@@ -81,7 +92,9 @@ def home():
 def singleplayer():
 
     return render_template(
+
         "singleplayer.html"
+
     )
 
 # ---------------- DIFFICULTY ----------------
@@ -89,15 +102,19 @@ def singleplayer():
 def get_difficulty(score):
 
     if score < 20:
+
         return 2, 2
 
     if score < 40:
+
         return 3, 2
 
     if score < 60:
+
         return 3, 2.5
 
     if score < 80:
+
         return 4, 2.5
 
     return 4, 3
@@ -113,19 +130,30 @@ def send_room_players(room_code):
 
         if p["room"] == room_code:
 
-            room_players.append({
+            room_players.append(
 
-                "id": sid,
-                "name": p["name"],
-                "color": p["color"],
-                "ready": p["ready"]
+                {
 
-            })
+                    "id": sid,
+
+                    "name": p["name"],
+
+                    "color": p["color"],
+
+                    "ready": p["ready"]
+
+                }
+
+            )
 
     socketio.emit(
+
         "update_room_players",
+
         room_players,
+
         to=room_code
+
     )
 
 # ---------------- CREATE ROOM ----------------
@@ -134,23 +162,39 @@ def send_room_players(room_code):
 def create_room():
 
     room_code = str(
+
         random.randint(
+
             1000,
+
             9999
+
         )
+
     )
 
-    join_room(room_code)
+    join_room(
+
+        room_code
+
+    )
 
     players[request.sid] = {
 
         "x": 370,
+
         "y": 300,
+
         "room": room_code,
+
         "name": "Player 1",
+
         "color": random.choice(
+
             PLAYER_COLORS
+
         ),
+
         "ready": False
 
     }
@@ -158,11 +202,17 @@ def create_room():
     rooms[room_code] = {
 
         "bullets": [],
+
         "score": 0,
+
         "winner": "",
+
         "loser": "",
+
         "game_started": False,
+
         "countdown_started": False,
+
         "last_fire_time": time.time()
 
     }
@@ -172,7 +222,9 @@ def create_room():
         "room_created",
 
         {
+
             "room_code": room_code
+
         },
 
         to=request.sid
@@ -180,7 +232,9 @@ def create_room():
     )
 
     send_room_players(
+
         room_code
+
     )
 
 
@@ -191,25 +245,46 @@ def join_room_request(data):
 
     room_code = data["room_code"]
 
-    print("JOIN REQUEST:", data)
+    print(
+
+        "JOIN REQUEST:",
+
+        data
+
+    )
 
     if room_code not in rooms:
 
-        print("ROOM DOES NOT EXIST")
+        print(
+
+            "ROOM DOES NOT EXIST"
+
+        )
 
         return
 
-    join_room(room_code)
+    join_room(
+
+        room_code
+
+    )
 
     players[request.sid] = {
 
         "x": 430,
+
         "y": 300,
+
         "room": room_code,
+
         "name": "Player 2",
+
         "color": random.choice(
+
             PLAYER_COLORS
+
         ),
+
         "ready": False
 
     }
@@ -219,7 +294,9 @@ def join_room_request(data):
         "room_joined",
 
         {
+
             "room_code": room_code
+
         },
 
         to=request.sid
@@ -235,7 +312,9 @@ def join_room_request(data):
     )
 
     send_room_players(
+
         room_code
+
     )
 
 
@@ -255,7 +334,9 @@ def update_profile(data):
     room_code = players[request.sid]["room"]
 
     send_room_players(
+
         room_code
+
     )
 
 
@@ -279,7 +360,9 @@ def toggle_ready():
     )
 
     send_room_players(
+
         room_code
+
     )
 
     room_players = [
@@ -329,7 +412,9 @@ def toggle_ready():
         threading.Thread(
 
             target=start_countdown,
+
             args=(room_code,),
+
             daemon=True
 
         ).start()
@@ -342,7 +427,9 @@ def start_countdown(room_code):
     values = [
 
         "3",
+
         "2",
+
         "1"
 
     ]
@@ -386,7 +473,9 @@ def start_countdown(room_code):
                 "start_countdown",
 
                 {
+
                     "value": "-"
+
                 },
 
                 to=room_code
@@ -400,7 +489,9 @@ def start_countdown(room_code):
             "start_countdown",
 
             {
+
                 "value": value
+
             },
 
             to=room_code
@@ -446,7 +537,9 @@ def start_countdown(room_code):
             "start_countdown",
 
             {
+
                 "value": "-"
+
             },
 
             to=room_code
@@ -460,7 +553,9 @@ def start_countdown(room_code):
         "start_countdown",
 
         {
+
             "value": "START!"
+
         },
 
         to=room_code
@@ -470,13 +565,19 @@ def start_countdown(room_code):
     time.sleep(1)
 
     rooms[room_code]["game_started"] = True
+
     rooms[room_code]["score"] = 0
+
     rooms[room_code]["bullets"] = []
+
     rooms[room_code]["last_fire_time"] = time.time()
 
     socketio.emit(
+
         "game_started",
+
         to=room_code
+
     )
 
 # ---------------- PLAYER DEAD ----------------
@@ -485,6 +586,7 @@ def start_countdown(room_code):
 def player_dead():
 
     if request.sid not in players:
+
         return
 
     room_code = players[request.sid]["room"]
@@ -498,25 +600,32 @@ def player_dead():
     for sid, p in players.items():
 
         if (
+
             p["room"] == room_code
+
             and
+
             sid != request.sid
+
         ):
 
             winner_name = p["name"]
+
             break
 
     room["winner"] = winner_name
+
     room["loser"] = loser_name
 
     room["game_started"] = False
+
     room["countdown_started"] = False
 
     room["bullets"] = []
 
     room["last_fire_time"] = time.time()
 
-    # reset ready status
+    # reset ready states
 
     for sid, p in players.items():
 
@@ -531,7 +640,9 @@ def player_dead():
         {
 
             "winner": room["winner"],
+
             "loser": room["loser"],
+
             "score": room["score"]
 
         },
@@ -541,7 +652,9 @@ def player_dead():
     )
 
     send_room_players(
+
         room_code
+
     )
 
 
@@ -551,6 +664,7 @@ def player_dead():
 def back_to_room():
 
     if request.sid not in players:
+
         return
 
     room_code = players[request.sid]["room"]
@@ -558,12 +672,15 @@ def back_to_room():
     room = rooms[room_code]
 
     room["game_started"] = False
+
     room["countdown_started"] = False
 
     room["score"] = 0
+
     room["bullets"] = []
 
     room["winner"] = ""
+
     room["loser"] = ""
 
     room["last_fire_time"] = time.time()
@@ -575,7 +692,9 @@ def back_to_room():
             p["ready"] = False
 
     send_room_players(
+
         room_code
+
     )
 
 
@@ -585,12 +704,15 @@ def back_to_room():
 def leave_room_request():
 
     if request.sid not in players:
+
         return
 
     room_code = players[request.sid]["room"]
 
     leave_room(
+
         room_code
+
     )
 
     del players[request.sid]
@@ -602,12 +724,15 @@ def leave_room_request():
         if p["room"] == room_code:
 
             room_has_players = True
+
             break
 
     if room_has_players:
 
         send_room_players(
+
             room_code
+
         )
 
     else:
@@ -623,48 +748,30 @@ def leave_room_request():
 def player_move(data):
 
     if request.sid not in players:
+
         return
 
+    # only update coordinates
+
     players[request.sid]["x"] = data["x"]
+
     players[request.sid]["y"] = data["y"]
-
-    room_code = players[request.sid]["room"]
-
-    room_players = []
-
-    for sid, player in players.items():
-
-        if player["room"] == room_code:
-
-            room_players.append({
-
-                "id": sid,
-                "x": player["x"],
-                "y": player["y"],
-                "name": player["name"],
-                "color": player["color"]
-
-            })
-
-    socketio.emit(
-
-        "update_players",
-
-        room_players,
-
-        to=room_code
-
-    )
-
 
 # ---------------- DISCONNECT ----------------
 
 @socketio.on("disconnect")
 def handle_disconnect():
 
-    print("DISCONNECTED:", request.sid)
+    print(
+
+        "DISCONNECTED:",
+
+        request.sid
+
+    )
 
     if request.sid not in players:
+
         return
 
     room_code = players[request.sid]["room"]
@@ -678,12 +785,15 @@ def handle_disconnect():
         if p["room"] == room_code:
 
             room_has_players = True
+
             break
 
     if room_has_players:
 
         send_room_players(
+
             room_code
+
         )
 
     else:
@@ -691,6 +801,7 @@ def handle_disconnect():
         if room_code in rooms:
 
             del rooms[room_code]
+
 
 # ---------------- GAME LOOP ----------------
 
@@ -702,9 +813,8 @@ def game_loop():
 
             room = rooms[room_code]
 
-            # wait until game starts
-
             if not room["game_started"]:
+
                 continue
 
             room_players = []
@@ -714,10 +824,13 @@ def game_loop():
                 if player["room"] == room_code:
 
                     room_players.append(
+
                         player
+
                     )
 
             if len(room_players) == 0:
+
                 continue
 
             # ---------------- FIRE BULLETS ----------------
@@ -727,6 +840,7 @@ def game_loop():
                 time.time()
 
                 -
+
                 room["last_fire_time"]
 
                 >= 1
@@ -740,7 +854,9 @@ def game_loop():
                     "update_score",
 
                     {
+
                         "score": room["score"]
+
                     },
 
                     to=room_code
@@ -750,7 +866,9 @@ def game_loop():
                 shooter_count, bullet_speed = (
 
                     get_difficulty(
+
                         room["score"]
+
                     )
 
                 )
@@ -758,8 +876,11 @@ def game_loop():
                 selected_shooters = (
 
                     random.sample(
+
                         shooters,
+
                         shooter_count
+
                     )
 
                 )
@@ -769,32 +890,45 @@ def game_loop():
                     target_player = (
 
                         random.choice(
+
                             room_players
+
                         )
 
                     )
 
                     dx = (
+
                         target_player["x"]
+
                         -
+
                         sx
+
                     )
 
                     dy = (
+
                         target_player["y"]
+
                         -
+
                         sy
+
                     )
 
                     distance = math.sqrt(
 
                         dx * dx
+
                         +
+
                         dy * dy
 
                     )
 
                     if distance == 0:
+
                         continue
 
                     room["bullets"].append(
@@ -802,22 +936,31 @@ def game_loop():
                         {
 
                             "x": sx,
+
                             "y": sy,
 
                             "dx":
 
                                 dx
+
                                 /
+
                                 distance
+
                                 *
+
                                 bullet_speed,
 
                             "dy":
 
                                 dy
+
                                 /
+
                                 distance
+
                                 *
+
                                 bullet_speed,
 
                             "radius": 6
@@ -833,6 +976,7 @@ def game_loop():
             for bullet in room["bullets"]:
 
                 bullet["x"] += bullet["dx"]
+
                 bullet["y"] += bullet["dy"]
 
             # ---------------- REMOVE OFFSCREEN BULLETS ----------------
@@ -846,22 +990,66 @@ def game_loop():
                 if (
 
                     -50
+
                     <
+
                     bullet["x"]
+
                     <
+
                     WORLD_WIDTH + 50
 
                     and
 
                     -50
+
                     <
+
                     bullet["y"]
+
                     <
+
                     WORLD_HEIGHT + 50
 
                 )
 
             ]
+
+            # ---------------- SEND PLAYERS ----------------
+
+            room_players_data = []
+
+            for sid, player in players.items():
+
+                if player["room"] == room_code:
+
+                    room_players_data.append(
+
+                        {
+
+                            "id": sid,
+
+                            "x": player["x"],
+
+                            "y": player["y"],
+
+                            "name": player["name"],
+
+                            "color": player["color"]
+
+                        }
+
+                    )
+
+            socketio.emit(
+
+                "update_players",
+
+                room_players_data,
+
+                to=room_code
+
+            )
 
             # ---------------- SEND BULLETS ----------------
 
@@ -875,12 +1063,22 @@ def game_loop():
 
             )
 
-        socketio.sleep(0.02)
+        # 33 ticks/sec
+
+        socketio.sleep(
+
+            0.03
+
+        )
 
 
 # ---------------- START BACKGROUND TASK ----------------
 
-socketio.start_background_task(game_loop)
+socketio.start_background_task(
+
+    game_loop
+
+)
 
 
 # ---------------- MAIN ----------------
