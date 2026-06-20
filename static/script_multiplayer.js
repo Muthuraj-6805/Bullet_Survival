@@ -90,6 +90,10 @@ let roomPlayers = [];
 
 let otherPlayers = {};
 
+// limit movement packets
+
+let lastPositionSend = 0;
+
 // ---------------- UI ----------------
 
 const menu = document.getElementById("menu");
@@ -622,8 +626,6 @@ socket.on(
 
     players => {
 
-        otherPlayers = {};
-
         players.forEach(
 
             p => {
@@ -634,17 +636,34 @@ socket.on(
 
                 ) {
 
-                    otherPlayers[p.id] = {
+                    if (
 
-                        x: p.x,
+                        !(p.id in otherPlayers)
 
-                        y: p.y,
+                    ) {
 
-                        name: p.name,
+                        otherPlayers[p.id] = {
 
-                        color: p.color
+                            x: p.x,
+                            y: p.y,
 
-                    };
+                            targetX: p.x,
+                            targetY: p.y,
+
+                            name: p.name,
+                            color: p.color
+
+                        };
+
+                    }
+
+                    else {
+
+                        otherPlayers[p.id].targetX = p.x;
+
+                        otherPlayers[p.id].targetY = p.y;
+
+                    }
 
                 }
 
@@ -671,19 +690,33 @@ function sendPosition(
 
     player.y = screenY / scaleY;
 
-    socket.emit(
+    const now = Date.now();
 
-        "player_move",
+    // send only every 50 ms
 
-        {
+    if (
 
-            x: player.x,
+        now - lastPositionSend >= 50
 
-            y: player.y
+    ) {
 
-        }
+        socket.volatile.emit(
 
-    );
+            "player_move",
+
+            {
+
+                x: player.x,
+
+                y: player.y
+
+            }
+
+        );
+
+        lastPositionSend = now;
+
+    }
 
 }
 
@@ -699,6 +732,20 @@ function drawOtherPlayers() {
     ) {
 
         let p = otherPlayers[id];
+
+        // smooth interpolation
+
+        p.x += (
+
+            p.targetX - p.x
+
+        ) * 0.25;
+
+        p.y += (
+
+            p.targetY - p.y
+
+        ) * 0.25;
 
         ctx.beginPath();
 
@@ -789,8 +836,6 @@ function animate() {
     }
 
     clearWorld();
-
-    // GAME PHASE
 
     if (
 
