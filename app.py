@@ -1067,7 +1067,7 @@ def game_loop():
 
         socketio.sleep(
 
-            0.03
+            0.016
 
         )
 
